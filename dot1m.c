@@ -37,7 +37,7 @@ typedef struct
 // #define VECLEN 100000
 // pthread_t callThd[NUMTHRDS];
 
-pthread_mutex_t mutexsum;
+pthread_rwlock_t rwsum;
 
 DOTDATA dotstr; 
 
@@ -84,11 +84,11 @@ to the appropriate variable in the structure.
 Lock a mutex prior to updating the value in the shared
 structure, and unlock it upon updating.
 */
-   pthread_mutex_lock (&mutexsum);
+   pthread_rwlock_wrlock (&rwsum);
    dotstr.sum += mysum;
    printf("Thread %ld did %d to %d:  mysum=%f global sum=%f\n",
 		offset,start,end,mysum,dotstr.sum);
-   pthread_mutex_unlock (&mutexsum);
+   pthread_rwlock_unlock (&rwsum);
 
    pthread_exit((void*) 0);
 }
@@ -135,7 +135,7 @@ dotstr.a = a;
 dotstr.b = b; 
 dotstr.sum=0;
 
-pthread_mutex_init(&mutexsum, NULL);
+pthread_rwlock_init(&rwsum, NULL);
          
 /* Create threads to perform the dotproduct  */
 pthread_attr_init(&attr);
@@ -161,7 +161,7 @@ for(i=0;i<NUMTHRDS;i++) {
 printf ("Sum =  %f \n", dotstr.sum);
 free (a);
 free (b);
-pthread_mutex_destroy(&mutexsum);
+pthread_rwlock_destroy(&rwsum);
 pthread_exit(NULL);
 }   
 
