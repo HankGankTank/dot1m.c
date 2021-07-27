@@ -81,7 +81,7 @@ to the appropriate variable in the structure.
     }
 
 /*
-Lock a mutex prior to updating the value in the shared
+Lock a read prior to updating the value in the shared
 structure, and unlock it upon updating.
 */
    pthread_rwlock_wrlock (&rwsum);
